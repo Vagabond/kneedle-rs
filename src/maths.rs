@@ -2,13 +2,16 @@ fn gaussian(x: f64, height: f64, center: f64, width: f64) -> f64 {
     height * (-(x - center) * (x - center) / (2.0 * width * width)).exp()
 }
 
-pub fn gaussian_smooth2d(data: Vec<Vec<f64>>, w: usize) -> Result<Vec<Vec<f64>>, &'static str> {
+pub fn gaussian_smooth2d<I: AsRef<[f64]>>(
+    data: &[I],
+    w: usize,
+) -> Result<Vec<Vec<f64>>, &'static str> {
     let datasize = data.len();
     if datasize == 0 {
         return Err("Empty data");
     }
 
-    let dimensions = data[0].len();
+    let dimensions = data[0].as_ref().len();
 
     if dimensions == 0 {
         return Err("dimension cannot be 0");
@@ -17,7 +20,7 @@ pub fn gaussian_smooth2d(data: Vec<Vec<f64>>, w: usize) -> Result<Vec<Vec<f64>>,
     let mut smoothed: Vec<Vec<f64>> = vec![vec![0.0; dimensions]; datasize];
 
     for i in 0..datasize {
-        if data[i].len() != dimensions {
+        if data[i].as_ref().len() != dimensions {
             return Err("all rows must have the same dimension");
         }
 
@@ -40,7 +43,7 @@ pub fn gaussian_smooth2d(data: Vec<Vec<f64>>, w: usize) -> Result<Vec<Vec<f64>>,
             let index_weight = gaussian(index_score, 1.0, 0.0, 1.0);
 
             for n in 0..dimensions {
-                sum_weights[n] += index_weight * data[j][n];
+                sum_weights[n] += index_weight * data[j].as_ref()[n];
             }
             sum_index_weight += index_weight;
         }
