@@ -2,10 +2,6 @@ mod maths;
 
 use crate::maths::{gaussian_smooth2d, minmax_normalize};
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
 fn find_candidate_indices(data: Vec<Vec<f64>>, find_minima: bool) -> Vec<usize> {
     let rows = data.len();
     let mut candidates: Vec<usize> = Vec::new();
@@ -121,7 +117,23 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+        let test_data = vec![
+            vec![0.0, 0.0],
+            vec![0.1, 0.55],
+            vec![0.2, 0.75],
+            vec![0.35, 0.875],
+            vec![0.45, 0.875],
+            vec![0.55, 0.9],
+            vec![0.675, 0.925],
+            vec![0.775, 0.95],
+            vec![0.875, 0.975],
+            vec![1.0, 1.0],
+        ];
+
+        let knee_points = kneedle(test_data, 1, 1, false).unwrap();
+
+        for point in knee_points {
+            println!("knee {:?}", point);
+        }
     }
 }

@@ -14,7 +14,7 @@ pub fn gaussian_smooth2d(data: Vec<Vec<f64>>, w: usize) -> Result<Vec<Vec<f64>>,
         return Err("dimension cannot be 0");
     }
 
-    let mut smoothed: Vec<Vec<f64>> = Vec::new();
+    let mut smoothed: Vec<Vec<f64>> = vec![vec![0.0; dimensions]; datasize];
 
     for i in 0..datasize {
         if data[i].len() != dimensions {
@@ -24,7 +24,7 @@ pub fn gaussian_smooth2d(data: Vec<Vec<f64>>, w: usize) -> Result<Vec<Vec<f64>>,
         let mut start = 0;
         let mut end = i + w;
 
-        if 0 < i - w {
+        if 0 < i as i32 - w as i32 {
             start = i - w;
         }
 
@@ -32,11 +32,11 @@ pub fn gaussian_smooth2d(data: Vec<Vec<f64>>, w: usize) -> Result<Vec<Vec<f64>>,
             end = datasize - 1;
         }
 
-        let mut sum_weights: Vec<f64> = Vec::new();
+        let mut sum_weights: Vec<f64> = vec![0.0; dimensions];
         let mut sum_index_weight = 0.0;
 
         for j in start..end + 1 {
-            let index_score = (((j - i) / w) as f64).abs();
+            let index_score = (((j as i32 - i as i32) / w as i32) as f64).abs();
             let index_weight = gaussian(index_score, 1.0, 0.0, 1.0);
 
             for n in 0..dimensions {
@@ -65,8 +65,8 @@ pub fn minmax_normalize(data: Vec<Vec<f64>>) -> Result<Vec<Vec<f64>>, &'static s
         return Err("dimension cannot be 0");
     }
 
-    let mut min_each_dimension: Vec<f64> = Vec::new();
-    let mut max_each_dimension: Vec<f64> = Vec::new();
+    let mut min_each_dimension: Vec<f64> = vec![0.0; dimensions];
+    let mut max_each_dimension: Vec<f64> = vec![0.0; dimensions];
 
     for i in 0..dimensions {
         min_each_dimension[i] = f64::MAX;
@@ -85,15 +85,14 @@ pub fn minmax_normalize(data: Vec<Vec<f64>>) -> Result<Vec<Vec<f64>>, &'static s
     }
 
     //2) normalise the data using the min and max
-    let mut range_each_dimension: Vec<f64> = Vec::new();
+    let mut range_each_dimension: Vec<f64> = vec![0.0; dimensions];
     for d in 0..dimensions {
         range_each_dimension[d] = max_each_dimension[d] - min_each_dimension[d];
     }
 
-    let mut normalized: Vec<Vec<f64>> = Vec::new();
+    let mut normalized: Vec<Vec<f64>> = vec![vec![0.0; dimensions]; datasize];
 
     for i in 0..datasize {
-        normalized[i] = Vec::new();
         for n in 0..dimensions {
             normalized[i][n] = (data[i][n] - min_each_dimension[n]) / range_each_dimension[n]
         }
