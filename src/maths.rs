@@ -1,5 +1,5 @@
 fn gaussian(x: f64, height: f64, center: f64, width: f64) -> f64 {
-    return height * (-(x - center) * (x - center) / (2.0 * width * width)).exp();
+    height * (-(x - center) * (x - center) / (2.0 * width * width)).exp()
 }
 
 pub fn gaussian_smooth2d(data: Vec<Vec<f64>>, w: usize) -> Result<Vec<Vec<f64>>, &'static str> {
@@ -50,7 +50,7 @@ pub fn gaussian_smooth2d(data: Vec<Vec<f64>>, w: usize) -> Result<Vec<Vec<f64>>,
         }
     }
 
-    return Ok(smoothed);
+    Ok(smoothed)
 }
 
 pub fn minmax_normalize(data: Vec<Vec<f64>>) -> Result<Vec<Vec<f64>>, &'static str> {
@@ -98,5 +98,5 @@ pub fn minmax_normalize(data: Vec<Vec<f64>>) -> Result<Vec<Vec<f64>>, &'static s
         }
     }
 
-    return Ok(normalized);
+    Ok(normalized)
 }

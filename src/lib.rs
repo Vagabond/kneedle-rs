@@ -13,7 +13,7 @@ fn find_candidate_indices(data: Vec<Vec<f64>>, find_minima: bool) -> Vec<usize> 
             candidates.push(i);
         }
     }
-    return candidates;
+    candidates
 }
 
 fn find_elbow_index(data: Vec<f64>) -> usize {
@@ -26,7 +26,7 @@ fn find_elbow_index(data: Vec<f64>) -> usize {
             best_index = i;
         }
     }
-    return best_index;
+    best_index
 }
 
 fn prepare(data: Vec<Vec<f64>>, smoothing_window: usize) -> Result<Vec<Vec<f64>>, &'static str> {
@@ -38,10 +38,10 @@ fn prepare(data: Vec<Vec<f64>>, smoothing_window: usize) -> Result<Vec<Vec<f64>>
 
     //subtract normalised x from normalised y (this is step 3 in the paper)
     for i in 0..normalized_data.len() {
-        normalized_data[i][1] = normalized_data[i][1] - normalized_data[i][0]
+        normalized_data[i][1] -= normalized_data[i][0]
     }
 
-    return Ok(normalized_data);
+    Ok(normalized_data)
 }
 
 fn compute_average_variance(data: Vec<Vec<f64>>) -> f64 {
@@ -50,7 +50,7 @@ fn compute_average_variance(data: Vec<Vec<f64>>) -> f64 {
     for i in 0..data.len() - 1 {
         variance += data[i + 1][0] - data[i][0];
     }
-    return variance / (data.len() - 1) as f64;
+    variance / (data.len() - 1) as f64
 }
 
 pub fn kneedle(
@@ -59,7 +59,7 @@ pub fn kneedle(
     smoothing_window: usize,
     find_elbow: bool,
 ) -> Result<Vec<Vec<f64>>, &'static str> {
-    if data.len() == 0 {
+    if data.is_empty() {
         return Err("Empty data");
     }
 
@@ -108,7 +108,7 @@ pub fn kneedle(
             }
         }
     }
-    return Ok(local_min_max_pts);
+    Ok(local_min_max_pts)
 }
 
 #[cfg(test)]
