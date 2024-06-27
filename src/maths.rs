@@ -39,7 +39,7 @@ pub fn gaussian_smooth2d<I: AsRef<[f64]>>(
         let mut sum_index_weight = 0.0;
 
         for j in start..end + 1 {
-            let index_score = (((j as i32 - i as i32) / w as i32) as f64).abs();
+            let index_score = (((j as f64 - i as f64) / w as f64) as f64).abs();
             let index_weight = gaussian(index_score, 1.0, 0.0, 1.0);
 
             for n in 0..dimensions {
@@ -68,13 +68,8 @@ pub fn minmax_normalize(data: Vec<Vec<f64>>) -> Result<Vec<Vec<f64>>, &'static s
         return Err("dimension cannot be 0");
     }
 
-    let mut min_each_dimension: Vec<f64> = vec![0.0; dimensions];
-    let mut max_each_dimension: Vec<f64> = vec![0.0; dimensions];
-
-    for i in 0..dimensions {
-        min_each_dimension[i] = f64::MAX;
-        min_each_dimension[i] = f64::MIN_POSITIVE;
-    }
+    let mut min_each_dimension: Vec<f64> = vec![f64::MAX; dimensions];
+    let mut max_each_dimension: Vec<f64> = vec![f64::MIN_POSITIVE; dimensions];
 
     //1) get min and max for each dimension of the data
     for i in 0..datasize {
